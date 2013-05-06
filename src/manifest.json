@@ -1,0 +1,21 @@
+{
+
+	"manifest_version": 2,
+	"name": "Opera Notes",
+	"description":"Write notes or copy them from web pages",
+	"version": "1.0",
+	"permissions":[
+		"storage", "contextMenus"
+	],
+	"icons":{
+		"16":"note.png"
+		},
+  "browser_action": {
+    "default_icon": "note.png",
+    "default_popup": "popup.html",
+    "default_title":"Opera Notes"
+  },
+    "background": {
+    "scripts": ["datamanager.js", "browsermenu.js", "init.js"]
+  }
+}

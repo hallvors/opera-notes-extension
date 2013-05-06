@@ -1,0 +1,15 @@
+Notes extension spec
+
+* toolbar button
+* popup window (notes/folders overview)
+* right-click menu entry: "copy to notes"
+
+Icons: from old Opera: - notes toolbar button, single note default icon, folder icon
+
+Popup window has folder tre and edit pane
+ * Triangle to open/close
+ * Focus outline
+ * keyboard navigation: up/down to select note, left/right to open/collapse folders, tab to edit, shift-tab to leave editor and return to folder tree, enter (on web-page associated note) to go to URL, delete to move to trash / delete, ctrl+n for new note, ctrl-shift-n for new folder ?
+
+ Data storage: chrome.storage ?
+
