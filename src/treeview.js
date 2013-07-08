@@ -327,9 +327,10 @@ var Treeview = function(root){
 			}*/
 		};
 	}
-	this._openURL = function(node){
+	this._openURL = function(node, active){
 		if (node.getAttribute('data-url')) {
-			window.open(node.getAttribute('data-url'));
+			if (active === undefined) {active = true};
+			chrome.tabs.create({url:node.getAttribute('data-url'), 'active':active});
 			return true;
 		};
 	}
@@ -342,10 +343,13 @@ var Treeview = function(root){
 			switch(keys[e.keyCode]){
 				case 'UP':
 				case 'DOWN':
-					e.target != this.editor && this._navInList( keys[e.keyCode], e.target );
-					e.preventDefault();
+					if(e.target != this.editor){
+						this._navInList( keys[e.keyCode], e.target );
+						e.preventDefault();
+					}
 					break;
 				case 'TAB':
+					if(e.altKey)return true; // allow alt-tab'ing
 					if (document.activeElement === this.editor) {
 						this._editingFocus.focus();
 						tryReallyHardToFocus(this._editingFocus);
@@ -353,12 +357,11 @@ var Treeview = function(root){
 						this.editor.focus();
 						tryReallyHardToFocus(this.editor);
 						this.editor.selectionStart = this.editor.value.length;
-						//setTimeout(function(){this.editor.focus()}.bind(this),0);
 					}
 					e.preventDefault();
 					break;
 				case 'ENTER': 
-					if(this._openURL(e.target)){
+					if(this._openURL(e.target, !e.ctrlKey)){
 						e.preventDefault();
 					}
 					break;
@@ -425,7 +428,7 @@ var Treeview = function(root){
 	}.bind(this),false);
 	this.root.addEventListener('dblclick', function(e){
 		if (e.target.classList.contains('web')) {
-			this._openURL(e.target);
+			this._openURL(e.target, !e.ctrlKey);
 		}else if (e.target.classList.contains('folderheader')) {
 			this.toggleFolderState(e.target);
 		};
@@ -468,6 +471,7 @@ var Treeview = function(root){
 	}, false);
 	this.root.addEventListener('drop', function(e){
 		var posHint = (e.clientY - e.target.offsetTop) > e.target.offsetHeight / 2 ? 'after' : 'before';
+		e.target.classList.remove('droptarget');
 		this._insertNode(e.target, this._dragElm, posHint);
 	}.bind(this), false);
 	this.editor.addEventListener('focus', function(e){
