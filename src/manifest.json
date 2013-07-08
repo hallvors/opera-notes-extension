@@ -4,6 +4,7 @@
 	"name": "Opera Notes",
 	"description":"Write notes or copy them from web pages",
 	"version": "1.0",
+	"options_page": "config.html",
 	"permissions":[
 		"storage", "contextMenus"
 	],
