@@ -144,7 +144,7 @@ function DataManager(){
 		if(this._dirty){
 			this.saveData();
 		}
-	}.bind(this), 1000 ); // the unload event doesn't save data, it seems. So this interval needs to be small
+	}.bind(this), 100 ); // the unload event doesn't save data, it seems. So this interval needs to be small
 	window.addEventListener('unload', function(e){if(this._dirty)this.saveData();}.bind(this), false);
 	this._setData = function(data){this.data = data;}
 	this.loadData = function( callback ){
