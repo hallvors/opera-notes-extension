@@ -161,7 +161,8 @@ var Treeview = function(root){
 			node.classList.remove('expanded');
 			return;
 		}
-
+		// No matter if the folder is expanded or collapsed, it's still focused and thus should be remembered as "active" node
+		this.setAsActiveID(node.dataset.itemID);
 		if (newState === 'collapsed') {
 			while( node.childNodes.length>1 ){
 				node.removeChild(node.lastChild);
@@ -170,7 +171,6 @@ var Treeview = function(root){
 			this.datamanager.update(node.dataset.itemID, 'expanded', false);
 		}else if (!node.classList.contains('expanded')) {
 			this.datamanager.update(node.dataset.itemID, 'expanded', true); // must happen first, or render() shows nothing
-			this.datamanager.update(node.dataset.itemID, 'active', true);
 			this.render(node, data);
 			//this._addToDOM(node, data.children);
 			node.classList.add('expanded');
@@ -214,6 +214,7 @@ var Treeview = function(root){
 		}else if (root.contains(nodeToFocus)) {// still in the main tree, let's keep focus there
 			nodeToFocus.focus();
 		}
+		if(document.activeElement.dataset.itemID)this.setAsActiveID(document.activeElement.dataset.itemID);
 	}
 	this.hasClipboardItems = function(){
 		return typeof this._clipboard.data !== 'undefined';
@@ -447,17 +448,19 @@ var Treeview = function(root){
 			this.editor.value = this.datamanager.get(elm.dataset.itemID).name;
 			removeAllClasses(document, 'inactive_focus');
 		}
+		var activeID = elm.dataset.itemID ? elm.dataset.itemID  : null;
+		this.setAsActiveID(activeID);
+		this._editingFocus = elm;
+	}.bind(this), true);
+	this.setAsActiveID = function (activeID) {
 		// make sure the active property is set on the right folder object in the data store
+		if(!activeID)return;
 		if(this.activeID){
 			this.datamanager.update(this.activeID, 'active', false);
 		}
-		var activeID = elm.dataset.itemID ? elm.dataset.itemID : elm.parentNode.dataset.itemID ? elm.parentNode.dataset.itemID : null;
-		if(activeID){
-			this.datamanager.update(activeID, 'active', true);
-			this.activeID = activeID;			
-		}
-		this._editingFocus = elm;
-	}.bind(this), true);
+		this.datamanager.update(activeID, 'active', true);
+		this.activeID = activeID;			
+	}
 	this.root.addEventListener('dragstart', function(e){
 		e.dataTransfer.setData("text/plain",e.target.dataset.itemID);
 		this._dragElm = e.target.classList.contains('folderheader') ? e.target.parentNode : e.target;
