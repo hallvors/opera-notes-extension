@@ -9,6 +9,9 @@ function DataManager(){
 		this._map[id][property] = value;
 		this._dirty=true;
 	}
+	this.get = function (id) {
+		return this._map[id];
+	}
 	this.remove = function(id){
 		var array = this._findParentArray(this.data, id);
 		if (array) {

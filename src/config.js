@@ -41,7 +41,7 @@ function adrToJSON(data){
 	return JSON.stringify(obj.children);
 }
 function entryToObject(data){
-	data = data.split(/\n/); 
+	data = data.split(/\n/);
 	var obj={};
 	for(var i=0, line, details; line = data[i]; i++){
 		line = line.trim();
@@ -49,7 +49,7 @@ function entryToObject(data){
 			obj.type = line.substr(1).toLowerCase();
 		}else{
 			details = line.split('=');
-			details[1] = details[1].replace(/\u0002/g, '\n'); // STX => line feed
+			details[1] = details[1].replace(/\u0002\u0002/g, '\n'); // STX => line feed
 			if (details[0] in {EXPANDED:1, ACTIVE:1, 'TRASH FOLDER':1}) {
 				details[1] = details[1] === 'YES'; // turn into boolean
 			};

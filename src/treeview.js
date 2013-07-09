@@ -44,9 +44,10 @@ var Treeview = function(root){
 			return;
 		};
 		var elm;
+		item.label = firstLine(item.name);
 		if(item.type === 'folder'){
 			elm = addElm('div', parent, {'class':'folder'});
-			addElm('button', elm, {'class':'folderheader', 'draggable':'true', 'data-item-i-d':item.id }).appendChild(document.createTextNode(item.name));
+			addElm('button', elm, {'class':'folderheader', 'draggable':'true', 'data-item-i-d':item.id }).appendChild(document.createTextNode(item.label));
 			if( item.expanded ){
 				elm.classList.add('expanded');
 			}
@@ -58,7 +59,7 @@ var Treeview = function(root){
 			};
 		}else{
 			elm = addElm('button', parent, {'class':item.type, 'draggable':'true'});
-			elm.appendChild(document.createTextNode(item.name));
+			elm.appendChild(document.createTextNode(item.label));
 			if (item.url) {
 				elm.setAttribute('data-url', item.url);
 				elm.classList.add('web');
@@ -83,7 +84,7 @@ var Treeview = function(root){
 		}
 		elm=elm.parentNode; // now points to <div class="folder"> ..
 		if (elm.classList.contains('trash')) { // No "new" notes in Trash, please
-			elm = document.getElementsByTagName('button')[0].parentNode;
+			elm = document.getElementsByTagName('button')[0].parentNode; // TODO: what if the first folder in the list *is* the Trash folder??
 		};
 		this.datamanager.add(data, elm.dataset.itemID);
 		if( elm.classList.contains('empty') ){
@@ -435,7 +436,7 @@ var Treeview = function(root){
 	}.bind(this), false);
 	this.root.addEventListener('focus', function(e){
 		if(e.target.tagName === 'BUTTON'){
-			this.editor.value = e.target.textContent;
+			this.editor.value = this.datamanager.get(e.target.dataset.itemID).name;
 			var list;	
 			removeAllClasses(document, 'inactive_focus');
 		}
@@ -480,7 +481,7 @@ var Treeview = function(root){
 		}
 	}.bind(this), false)
 	this.editor.addEventListener('input', function(){
-		this._editingFocus.textContent = this.editor.value;
+		this._editingFocus.textContent = firstLine(this.editor.value);
 		this.datamanager.update(this._editingFocus.dataset.itemID, 'name', this.editor.value);
 	}.bind(this), false);
 	this.associateDataManager = function(datamanager){
@@ -520,6 +521,8 @@ var Treeview = function(root){
 		setTimeout(function(){elm.focus();}, 4);
 		setTimeout(function(){elm.focus();}, 8);
 	}
-
+	function firstLine (str) {
+		return str.indexOf('\n') > -1 ? str.substr(0, str.indexOf('\n')) : str;
+	}
 }
 
