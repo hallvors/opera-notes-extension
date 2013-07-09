@@ -12,10 +12,11 @@ var Treeview = function(root){
 	this.editor = document.getElementsByTagName('textarea')[0];
 	this._clipboard={data:undefined, node:undefined, method:undefined};
 	var counter=0;
+	var activeNode;
 	this.render = function(parentNode, data){
-		 // recursively adds all visible nodes and folders to tree
-		 if(!parentNode)parentNode = this.root;
-		 this._insertionParentElm = parentNode;
+		// recursively adds all visible nodes and folders to tree
+		if(!parentNode)parentNode = this.root;
+		this._insertionParentElm = parentNode;
 		this.datamanager.iterate(this, function(obj, parentArray, index, parentObj){
 			if (parentObj && !parentObj.expanded) {return;};
 			this._addToDOM(this._insertionParentElm, obj);
@@ -29,11 +30,16 @@ var Treeview = function(root){
 			if ((parentArray.length === index+1) && (obj.type === 'note' || (obj.type === 'folder' && (obj.expanded === false || obj.children.length === 0))) && root.contains(obj.elm.parentNode.parentNode)) {
 				this._insertionParentElm = obj.elm.parentNode.parentNode;
 			};
+			if(obj.active){
+				activeNode = obj.elm;
+			}
 		}, data?data.children:undefined, data, parentNode);
-		if(parentNode === root){
-			document.getElementsByTagName('button')[0].focus(); // auto-focus first element in list
-			tryReallyHardToFocus(document.getElementsByTagName('button')[0]);			
-		}
+		if(!activeNode)activeNode = document.getElementsByTagName('button')[0];
+		if (activeNode.tagName === 'DIV') {
+			activeNode = activeNode.getElementsByTagName('button')[0];
+		};
+		activeNode.focus(); // auto-focus active (or first) element in list
+		tryReallyHardToFocus(activeNode);			
 		this._insertionParentElm = undefined;
 	}
 	this._addToDOM = function(parent, item){
@@ -164,6 +170,7 @@ var Treeview = function(root){
 			this.datamanager.update(node.dataset.itemID, 'expanded', false);
 		}else if (!node.classList.contains('expanded')) {
 			this.datamanager.update(node.dataset.itemID, 'expanded', true); // must happen first, or render() shows nothing
+			this.datamanager.update(node.dataset.itemID, 'active', true);
 			this.render(node, data);
 			//this._addToDOM(node, data.children);
 			node.classList.add('expanded');
@@ -435,24 +442,21 @@ var Treeview = function(root){
 		};
 	}.bind(this), false);
 	this.root.addEventListener('focus', function(e){
-		if(e.target.tagName === 'BUTTON'){
-			this.editor.value = this.datamanager.get(e.target.dataset.itemID).name;
-			var list;	
+		var elm = e.target;
+		if(elm.tagName === 'BUTTON'){
+			this.editor.value = this.datamanager.get(elm.dataset.itemID).name;
 			removeAllClasses(document, 'inactive_focus');
 		}
 		// make sure the active property is set on the right folder object in the data store
 		if(this.activeID){
 			this.datamanager.update(this.activeID, 'active', false);
 		}
-		var elm = e.target, relatedFolderID;
-		while(elm && elm.tagName !== 'DIV'){
-			elm=elm.parentElement;
+		var activeID = elm.dataset.itemID ? elm.dataset.itemID : elm.parentNode.dataset.itemID ? elm.parentNode.dataset.itemID : null;
+		if(activeID){
+			this.datamanager.update(activeID, 'active', true);
+			this.activeID = activeID;			
 		}
-		if(elm !== this.root){
-			this.datamanager.update(elm.dataset.itemID, 'active', true);
-			this.activeID = elm.dataset.itemID;
-		}
-		this._editingFocus = e.target;
+		this._editingFocus = elm;
 	}.bind(this), true);
 	this.root.addEventListener('dragstart', function(e){
 		e.dataTransfer.setData("text/plain",e.target.dataset.itemID);
