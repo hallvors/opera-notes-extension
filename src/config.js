@@ -48,7 +48,7 @@ function entryToObject(data){
 		if(/^#/.test(line)){
 			obj.type = line.substr(1).toLowerCase();
 		}else{
-			details = line.split('=');
+			details = line.split(/=/);
 			details[1] = details[1].replace(/\u0002\u0002/g, '\n'); // STX => line feed
 			if (details[0] in {EXPANDED:1, ACTIVE:1, 'TRASH FOLDER':1}) {
 				details[1] = details[1] === 'YES'; // turn into boolean
