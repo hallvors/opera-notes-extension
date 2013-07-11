@@ -1,13 +1,26 @@
 html, body{
-	height:100%;
-	width: 100%;
-	min-width: 250px;
-	min-height: 350px;
+	height: auto;
+	width: auto;
 	overflow: hidden;
 	padding: 0;
-	margin: 0}
-#foldertree, #editor{ height:50%; margin:0; padding: 0; width: 99% }
-#foldertree{overflow-y: auto; overflow-x:hidden;}
+	margin: 0;
+	max-width: 45em;
+}
+
+#foldertree, #editor{
+min-width: 15.625em;
+margin: 0em 0.2em 0.2em 0.2em;
+}
+
+#foldertree{
+min-height: 5em;
+max-height: 10.938em;
+border-left: 0.07em solid #707070;
+border-bottom: 0.07em solid #707070;
+overflow-y: auto; 
+overflow-x:hidden;
+}
+
 #foldertree button{
 	border: 0;
 	background: transparent;
@@ -15,76 +28,98 @@ html, body{
 	width: 100%;
 	overflow: hidden;
 	text-align: left;
-	line-height: 1.2em;
-	height: 1.2em;
+	line-height: 1em;
+	height: 1.3em;
 	background-image: url(note.png);
 	background-repeat: no-repeat;
-	padding-left: 17px;
-	margin-left: 16px;
+	padding-left: 1.5em;
+	margin: 0em 1em 0.4em 0em;
 }
+
 #foldertree button.web{
 	background-image: url(note_web.png);
+
 }
 #foldertree .folder{
-	padding-left: 16px;
+	padding-left: 1em;
 	background-image: url(group_closed.png);
 	background-repeat: no-repeat;
-	height: 1.2em;
+	height: 1.3em;
 	overflow: hidden;
 }
+
 #foldertree .folder.expanded{
-	padding-left: 16px;
+	padding-left: 1em;
 	background-image: url(group_open.png);
 	height: auto;
 }
+
 #foldertree .folder.trash>button:first-child{
 	background-image: url(trash.png);
 }
+
 #foldertree .folder.empty{
 	background-image: none;
 }
+
 #foldertree button.folderheader{
 	margin-left: 0px;
 	background-image: url(folder.png);
 }
+
 #foldertree button:focus{
 	background-color: Highlight;
 	color: HighlightText;
 }
+
 #foldertree button.inactive_focus{
 	background-color: lightgrey;
 }
+
 #foldertree .folderheader.droptarget{
 	background-color: Highlight;
 	color: HighlightText;
 }
+
 #foldertree .note.droptarget{
-	outline-top: 2px solid black;
+	outline-top: 0.125em solid black;
 }
 
-#editor textarea{ height: 100%; width: 100%; overflow: auto;margin: 0 }
+textarea{ 
+min-height: 10.938em;
+max-width: 100%;
+max-height: 100%;
+width:100%;
+height:100%;
+box-sizing: border-box;
+}
 
 .menu{
 	background-color: Menu;
 	position: absolute;
-	border: 2px black outset;
+	border-top: 0.07em solid #707070;
+        border-left: 0.07em solid #707070;
+        border-radius: 0.2em;
 	width: auto;
 	text-align: left;
+	box-shadow: 0.2em 0.2em 0.5em #707070;	
 }
+
 .menu a{
 	display: block;
 	text-decoration: none;
-	padding: 0;
-	padding-left: 5px;
-	padding-right: 5px;
+	padding: 0.1em 0.3em 0.1em 0.3em;
 	margin: 0;
 	color:MenuText;
 	text-align: left;
+	font-size: 0.9em;
 }
+
 .menu a.disabled{
 	font-style: italic;
 	color: GrayText;
 }
+
 .menu a:focus{
 	background-color: Highlight;
 	color: HighlightText;
