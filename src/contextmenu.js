@@ -13,7 +13,7 @@ document.addEventListener('contextmenu', function (e) {
 	var menu = document.createElement('div');
 	menu.classList.add('menu');
 	document.body.appendChild(menu);
-	
+	e.preventDefault();
 	menu.style.left = e.pageX+'px', menu.style.top = e.pageY+'px';
 	var commands = [
 		{
