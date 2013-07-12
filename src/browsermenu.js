@@ -1,6 +1,6 @@
 // Now the context menu entry in the browser's built-in selection menu
 var title = "Copy to Note";
-var id = chrome.contextMenus.create({"title": title, "contexts":['selection'], 
+chrome.contextMenus.create({"title": title, "contexts":['selection'], 
                    "onclick": menuClickHandler});
 
 function menuClickHandler(info, tab) {
@@ -12,7 +12,9 @@ function menuClickHandler(info, tab) {
 		// Now, because getting data is async the actual action has to happen in a callback function..
 		function(){
 			this.add( {type:'note', name:info.selectionText, url:info.pageUrl} );
-			this.saveData(); // we make sure this is saved immediately rather than waiting up to a minute
-			// because if someone opens the popup, the new entry must be available immediately
+			this.saveData(); // we make sure this is saved immediately
+			// because if someone opens the popup, the new entry must be available
 		});
 }
+
+
