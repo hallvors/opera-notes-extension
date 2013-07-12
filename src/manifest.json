@@ -17,6 +17,13 @@
     "default_title":"Opera Notes"
   },
     "background": {
-    "scripts": ["datamanager.js", "browsermenu.js", "init.js"]
-  }
+    "scripts": ["datamanager.js", "init.js", "browsermenu.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["injected_script.js"],
+      "all_frames": true
+    }
+  ]
 }

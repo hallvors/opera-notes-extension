@@ -17,4 +17,26 @@ function menuClickHandler(info, tab) {
 		});
 }
 
-
+// Feature request: menu for inserting note data into fields. 
+var insertNoteMenu = chrome.contextMenus.create({'title':'Insert Note', 'contexts':['editable']});
+var menuObjects = {'root':insertNoteMenu};
+datamanager.loadData(
+	function(){
+		datamanager.iterate(null, function (obj, parentAr, idx, parentObj) { // Its first argument is the object, second is parent array, third index, fourth is the object that referenced the array
+			var parent = parentObj ? menuObjects[parentObj.id] : menuObjects.root;
+			var title;
+			if(/\n/.test(obj.name) && obj.name.indexOf('\n')<41){
+				title = obj.name.substr(0, obj.name.indexOf('\n'));
+			}else if(obj.name.length > 40){
+				title = obj.name.substr(0,40)+'...';
+			}else{
+				title = obj.name;
+			}
+			menuObjects[obj.id] = chrome.contextMenus.create({'title':title, 'contexts':['editable'], 'parentId': parent, 'onclick':function(){
+				chrome.tabs.getSelected(null, function(tab) {
+					chrome.tabs.sendMessage(tab.id, {text_to_insert: obj.name});
+				});
+			}});
+		});
+	}
+);
