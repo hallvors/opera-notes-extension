@@ -1,6 +1,5 @@
-
 // Now the context menu entry in the browser's built-in selection menu
-var title = "Copy to note";
+var title = "Copy to Note";
 var id = chrome.contextMenus.create({"title": title, "contexts":['selection'], 
                    "onclick": menuClickHandler});
 
