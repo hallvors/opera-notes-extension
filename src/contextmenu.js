@@ -16,13 +16,13 @@ document.addEventListener('contextmenu', function (e) {
 	menu.style.left = e.pageX+'px', menu.style.top = e.pageY+'px';
 	var commands = [
 		{
-			name:'New note', 
+			name:'New Note', 
 			method:function(e){
 				tree.addItem('note');
 			}
 		},
 		{
-			name:'New folder', 
+			name:'New Folder', 
 			method:function(e){
 				tree.addItem('folder');
 			}
