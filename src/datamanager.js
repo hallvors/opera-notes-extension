@@ -118,6 +118,7 @@ function DataManager(){
 			//chrome.storage.local.get('notesdata', function(data){ console.log(data.notesdata) });
 		}.bind(this)); // we could just store the object without JSON stringification,
 		// but we'd have to make a clone to remove the generated IDs
+		chrome.extension.sendMessage({'update_insert_note_menu':true})
 		this._dirty=false; 
 	}
 	this.iterate = function(thisObj, func, array, parentObj){ // calls func on all objects in all arrays, recursively

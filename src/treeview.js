@@ -90,7 +90,7 @@ var Treeview = function(root){
 		}
 		elm=elm.parentNode; // now points to <div class="folder"> ..
 		if (elm.classList.contains('trash')) { // No "new" notes in Trash, please
-			elm = document.getElementsByTagName('button')[0].parentNode; // TODO: what if the first folder in the list *is* the Trash folder??
+			elm = this.root; // document.getElementsByTagName('button')[0].parentNode; // TODO: what if the first folder in the list *is* the Trash folder??
 		};
 		this.datamanager.add(data, elm.dataset.itemID);
 		if( elm.classList.contains('empty') ){
