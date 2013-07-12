@@ -75,13 +75,15 @@ var Treeview = function(root){
 		elm.dataset.itemID = item.id || (item.id = counter++);
 		return elm;
 	}
-	this.addItem = function(type, url){
+	this.addItem = function(type, url, focusNode){
 		// find folder of currently active note/folder
 		var elm;
 		var data = {'type':type, name:''};
 		if(type === 'folder')data.children = [];
 		if(url)data.url = url;
-		if(document.activeElement === this.editor){
+		if(focusNode){
+			elm = focusNode;
+		}else if(document.activeElement === this.editor){
 			elm = this._editingFocus;
 		}else if (document.activeElement.tagName === 'BUTTON') {
 			elm = document.activeElement;
@@ -90,7 +92,7 @@ var Treeview = function(root){
 		}
 		elm=elm.parentNode; // now points to <div class="folder"> ..
 		if (elm.classList.contains('trash')) { // No "new" notes in Trash, please
-			elm = this.root; // document.getElementsByTagName('button')[0].parentNode; // TODO: what if the first folder in the list *is* the Trash folder??
+			elm = this.root;
 		};
 		this.datamanager.add(data, elm.dataset.itemID);
 		if( elm.classList.contains('empty') ){
@@ -348,6 +350,7 @@ var Treeview = function(root){
 
 	document.addEventListener('keydown', function(e){
 		if(!this.root.contains(e.target) && e.keyCode !== 9)return; // the only key we need to detect in the TEXTAREA is the TAB key
+		if(e.keyCode === 9 && e.altKey)return; // another attempt at allowing alt-tab...
 		if( e.keyCode in keys  ){
 			switch(keys[e.keyCode]){
 				case 'UP':
@@ -355,6 +358,7 @@ var Treeview = function(root){
 					if(e.target != this.editor){
 						this._navInList( keys[e.keyCode], e.target );
 						e.preventDefault();
+						e.stopPropagation();
 					}
 					break;
 				case 'TAB':
@@ -369,7 +373,7 @@ var Treeview = function(root){
 					}
 					e.preventDefault();
 					break;
-				case 'ENTER': 
+				case 'ENTER':
 					if(this._openURL(e.target, !e.ctrlKey)){
 						e.preventDefault();
 					}
@@ -380,18 +384,24 @@ var Treeview = function(root){
 				case 'LEFT':
 					this.toggleFolderState(e.target, 'collapsed')
 					e.preventDefault();
+					e.stopPropagation();
 					break;
 
 				case 'RIGHT':
 					this.toggleFolderState(e.target, 'expanded')
 					e.preventDefault();
+					e.stopPropagation();
 					break;
 				case 'HOME':
 					document.getElementsByTagName('button')[0].focus();
+					e.preventDefault();
+					e.stopPropagation();
 					break;
 				case 'END':
 					var list = document.getElementsByTagName('button');
 					list[list.length-1].focus();
+					e.preventDefault();
+					e.stopPropagation();
 					break;
 				case 'N':
 					if(e.target === this.editor) break;

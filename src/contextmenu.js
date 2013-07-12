@@ -19,13 +19,13 @@ document.addEventListener('contextmenu', function (e) {
 		{
 			name:'New Note', 
 			method:function(e){
-				tree.addItem('note');
+				tree.addItem('note', null, target);
 			}
 		},
 		{
 			name:'New Folder', 
 			method:function(e){
-				tree.addItem('folder');
+				tree.addItem('folder', null, target);
 			}
 		},
 		{
@@ -83,7 +83,7 @@ document.addEventListener('contextmenu', function (e) {
 	menu.addEventListener('mouseover', function(e){
 		if(!e.target.classList.contains('disabled'))e.target.focus();
 	}, false);
-	window.addEventListener('keydown', function(e){
+	menu.addEventListener('keydown', function(e){
 		var direction = e.keyCode === 38 ? 'previous' : e.keyCode === 40 ? 'next' : '';
 		if (direction ) {
 			var focusNode = e.target[direction+'Sibling'];
